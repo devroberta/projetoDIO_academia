@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
@@ -35,6 +36,12 @@ public class AlunoController {
   @GetMapping("/avaliacoes/{id}")
   public List<AvaliacaoFisica> getAllAvaliacaoFisica (@PathVariable Long id) {
     return service.getAllAvaliacaoFisicaPorId(id);
+  }
+
+  @GetMapping("/dataDeNascimento")
+  public List<Aluno> getAllByDataDeNascimento(
+          @RequestParam(value = "dataDeNascimento", required = false) String dataDeNascimento) {
+    return service.getAllByDataDeNascimento(dataDeNascimento);
   }
 
 }
