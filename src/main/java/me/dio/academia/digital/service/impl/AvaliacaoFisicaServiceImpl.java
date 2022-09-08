@@ -24,7 +24,7 @@ public class AvaliacaoFisicaServiceImpl implements IAvaliacaoFisicaService {
   @Override
   public AvaliacaoFisica create(AvaliacaoFisicaForm form) {
     AvaliacaoFisica avaliacaoFisica = new AvaliacaoFisica();
-    Aluno aluno = alunoRepository.findById(form.getAlunoId()).get();
+    Aluno aluno = alunoRepository.findById(form.getAlunoId()).orElseThrow(() -> new RuntimeException("Id não encontrado"));
     avaliacaoFisica.setAluno(aluno);
     avaliacaoFisica.setPeso(form.getPeso());
     avaliacaoFisica.setAltura(form.getAltura());
@@ -33,21 +33,27 @@ public class AvaliacaoFisicaServiceImpl implements IAvaliacaoFisicaService {
 
   @Override
   public AvaliacaoFisica get(Long id) {
-    return null;
+    return avaliacaoFisicaRepository.findById(id).orElseThrow(() -> new RuntimeException("Id não encontrado"));
   }
 
   @Override
   public List<AvaliacaoFisica> getAll() {
-    return null;
+    return avaliacaoFisicaRepository.findAll();
   }
 
   @Override
   public AvaliacaoFisica update(Long id, AvaliacaoFisicaUpdateForm formUpdate) {
-    return null;
+    AvaliacaoFisica avaliacaoFisica = avaliacaoFisicaRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Id não encontrado"));
+    avaliacaoFisica.setPeso(formUpdate.getPeso());
+    avaliacaoFisica.setAltura(formUpdate.getAltura());
+    return avaliacaoFisicaRepository.save(avaliacaoFisica);
   }
 
   @Override
   public void delete(Long id) {
-
+    AvaliacaoFisica avaliacaoFisica = avaliacaoFisicaRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Id não encontrado"));
+    avaliacaoFisicaRepository.delete(avaliacaoFisica);
   }
 }

@@ -1,7 +1,9 @@
 package me.dio.academia.digital.service.impl;
 
+import me.dio.academia.digital.entity.Aluno;
 import me.dio.academia.digital.entity.Matricula;
 import me.dio.academia.digital.entity.form.MatriculaForm;
+import me.dio.academia.digital.repository.AlunoRepository;
 import me.dio.academia.digital.repository.MatriculaRepository;
 import me.dio.academia.digital.service.IMatriculaService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,14 +17,20 @@ public class MatriculaServiceImpl implements IMatriculaService {
   @Autowired
   private MatriculaRepository matriculaRepository;
 
+  @Autowired
+  private AlunoRepository alunoRepository;
+
   @Override
   public Matricula create(MatriculaForm form) {
-    return null;
+    Aluno aluno = alunoRepository.findById(form.getAlunoId()).orElseThrow(() -> new RuntimeException("Id não encontrado"));
+    Matricula matricula = new Matricula();
+    matricula.setAluno(aluno);
+    return matriculaRepository.save(matricula);
   }
 
   @Override
   public Matricula get(Long id) {
-    return null;
+    return matriculaRepository.findById(id).orElseThrow(() -> new RuntimeException("Id não encontrado"));
   }
 
   @Override
@@ -36,6 +44,8 @@ public class MatriculaServiceImpl implements IMatriculaService {
 
   @Override
   public void delete(Long id) {
-
+    Matricula matricula = matriculaRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Id não encontrado"));
+    matriculaRepository.delete(matricula);
   }
 }

@@ -6,7 +6,6 @@ import me.dio.academia.digital.entity.form.AlunoForm;
 import me.dio.academia.digital.entity.form.AlunoUpdateForm;
 import me.dio.academia.digital.infra.utils.JavaTimeUtils;
 import me.dio.academia.digital.repository.AlunoRepository;
-import me.dio.academia.digital.repository.AvaliacaoFisicaRepository;
 import me.dio.academia.digital.service.IAlunoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,9 +19,6 @@ public class AlunoServiceImpl implements IAlunoService {
   @Autowired
   private AlunoRepository repository;
 
-  @Autowired
-  private AvaliacaoFisicaRepository avaliacaoFisicaRepository;
-
   @Override
   public Aluno create(AlunoForm form) {
     Aluno aluno = new Aluno();
@@ -34,8 +30,8 @@ public class AlunoServiceImpl implements IAlunoService {
   }
 
   @Override
-  public Aluno get(Long id) {
-    return null;
+  public Aluno getAlunoById(Long id) {
+    return repository.findById(id).orElseThrow(() -> new RuntimeException("Id não encontrado"));
   }
 
   @Override
@@ -45,17 +41,22 @@ public class AlunoServiceImpl implements IAlunoService {
 
   @Override
   public Aluno update(Long id, AlunoUpdateForm formUpdate) {
-    return null;
+    Aluno aluno = repository.findById(id).orElseThrow(() -> new RuntimeException("Id não encontrado"));
+    aluno.setNome(formUpdate.getNome());
+    aluno.setBairro(formUpdate.getBairro());
+    aluno.setDataDeNascimento(formUpdate.getDataDeNascimento());
+    return repository.save(aluno);
   }
 
   @Override
   public void delete(Long id) {
-
+    Aluno aluno = repository.findById(id).orElseThrow(() -> new RuntimeException("Id não encontrado"));
+    repository.delete(aluno);
   }
 
   @Override
   public List<AvaliacaoFisica> getAllAvaliacaoFisicaPorId(Long id) {
-    Aluno aluno = repository.findById(id).get();
+    Aluno aluno = repository.findById(id).orElseThrow(() -> new RuntimeException("Id não encontrado"));
     return aluno.getAvaliacoes();
   }
 
